@@ -1,0 +1,17 @@
+[
+  {
+    "entryDate": "2026-11-04T10:15:00.1234567+04:00",
+    "entryDocumentNumber": "1003",
+    "entryAmountDebit": 10.0,
+    "entryAmountDebitBase": 10.0,
+    "entryAmountCredit": 0.0,
+    "entryAmount": -10.0,
+    "entryComment": "საკომისიო",
+    "documentProductGroup": "COM",
+    "documentValueDate": "2026-11-04T00:00:00+04:00",
+    "beneficiaryDetails": {"name": "Bank of Georgia", "inn": "400000099", "accountNumber": null, "bankCode": "BAGAGE22", "bankName": "Bank of Georgia"},
+    "documentNomination": "Monthly fee",
+    "documentKey": 5550003.0,
+    "entryId": 7770003.0
+  }
+]

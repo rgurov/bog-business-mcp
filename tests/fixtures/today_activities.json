@@ -1,0 +1,21 @@
+[
+  {
+    "Id": 9990001,
+    "DocKey": 6660001,
+    "DocNo": "2001",
+    "PostDate": "2026-11-10T11:30:00",
+    "ValueDate": "2026-11-10T00:00:00",
+    "EntryType": "PMD",
+    "EntryComment": "გადარიცხვა",
+    "EntryCommentEn": "Transfer",
+    "Nomination": "Salary advance",
+    "Credit": 0.0,
+    "Debit": 200.00,
+    "Amount": 200.00,
+    "AmountBase": 200.00,
+    "PayerName": null,
+    "PayerInn": null,
+    "Sender": {"Name": "შპს ჩვენი კომპანია", "Inn": "400000000", "AccountNumber": "GE00BG0000000000000001", "BankCode": "BAGAGE22", "BankName": "Bank of Georgia"},
+    "Beneficiary": {"Name": "Ivan Ivanov", "Inn": "01000000000", "AccountNumber": "GE00BG0000000000000077", "BankCode": "BAGAGE22", "BankName": "Bank of Georgia"}
+  }
+]

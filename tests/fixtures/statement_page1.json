@@ -1,0 +1,59 @@
+{
+  "Id": 987654,
+  "Count": 2,
+  "TotalCount": 3,
+  "Records": [
+    {
+      "EntryDate": "2026-11-09T00:00:00",
+      "EntryDocumentNumber": "1001",
+      "EntryAccountNumber": "GE00BG0000000000000001GEL",
+      "EntryAmountDebit": 0.0,
+      "EntryAmountDebitBase": null,
+      "EntryAmountCredit": 1500.50,
+      "EntryAmountCreditBase": 1500.50,
+      "EntryAmountBase": 1500.50,
+      "EntryAmount": 1500.50,
+      "EntryComment": "შემოსული გადარიცხვა",
+      "DocumentProductGroup": "PMD",
+      "DocumentValueDate": "2026-11-09T00:00:00",
+      "SenderDetails": {
+        "Name": "შპს კლიენტი",
+        "Inn": "400000001",
+        "AccountNumber": "GE00TB0000000000000009",
+        "BankCode": "TBCBGE22",
+        "BankName": "TBC Bank"
+      },
+      "BeneficiaryDetails": {
+        "Name": "შპს ჩვენი კომპანია",
+        "Inn": "400000000",
+        "AccountNumber": "GE00BG0000000000000001",
+        "BankCode": "BAGAGE22",
+        "BankName": "Bank of Georgia"
+      },
+      "DocumentNomination": "ინვოისი #42 გადახდა",
+      "DocumentInformation": null,
+      "DocumentKey": 5550001.0,
+      "EntryId": 7770001.0,
+      "DocComment": null,
+      "AuthDate": null
+    },
+    {
+      "EntryDate": "2026-11-08T00:00:00",
+      "EntryDocumentNumber": "1002",
+      "EntryAmountDebit": 35.20,
+      "EntryAmountDebitBase": 35.20,
+      "EntryAmountCredit": 0.0,
+      "EntryAmountCreditBase": null,
+      "EntryAmountBase": -35.20,
+      "EntryAmount": -35.20,
+      "EntryComment": "Hosting payment",
+      "DocumentProductGroup": "PLC",
+      "DocumentValueDate": "2026-11-08T00:00:00",
+      "SenderDetails": {"Name": "შპს ჩვენი კომპანია", "Inn": "400000000", "AccountNumber": "GE00BG0000000000000001", "BankCode": "BAGAGE22", "BankName": "Bank of Georgia"},
+      "BeneficiaryDetails": {"Name": "Hetzner Online GmbH", "Inn": null, "AccountNumber": null, "BankCode": null, "BankName": null},
+      "DocumentNomination": "Server rent November",
+      "DocumentKey": 5550002.0,
+      "EntryId": 7770002.0
+    }
+  ]
+}
