@@ -37,6 +37,10 @@ Each transaction:
   "purpose": "Invoice #42",
   "description": "...",
   "description_en": null,
+  "merchant": null,
+  "mcc": null,
+  "original_amount": null,
+  "original_currency": null,
   "type": "PMD",
   "document_no": "1001",
   "source": "statement"
@@ -44,6 +48,11 @@ Each transaction:
 ```
 
 Amounts are decimal strings. Texts are returned as BoG sends them (often in Georgian).
+
+Card payments come from BoG without a counterparty: the merchant, MCC and the amount in
+the original currency exist only inside the Georgian entry text. The server parses them
+into `merchant`, `mcc`, `original_amount` and `original_currency`. `query` searches
+`merchant` as well.
 
 ## Getting API credentials
 

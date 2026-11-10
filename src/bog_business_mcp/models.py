@@ -63,6 +63,14 @@ class Transaction(BaseModel):
     description_en: str | None = Field(
         default=None, description="English entry comment, when BoG provides it"
     )
+    merchant: str | None = Field(
+        default=None, description="Card payments: merchant and country parsed from the bank text"
+    )
+    mcc: str | None = Field(default=None, description="Card payments: merchant category code")
+    original_amount: Decimal | None = Field(
+        default=None, description="Card payments: amount in the original transaction currency"
+    )
+    original_currency: str | None = None
     type: str | None = Field(
         default=None, description="BoG product group / entry type (e.g. PMD, PLC, COM)"
     )

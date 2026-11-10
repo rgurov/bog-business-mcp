@@ -71,12 +71,22 @@ Direction: `out` if debit > 0, `in` if credit > 0, otherwise the sign of the ent
 amount. `amount` is always positive. Counterparty: the sender for incoming, the
 beneficiary for outgoing.
 
-## Open questions (need real credentials)
+## Verified on the live API (2026-11-10)
 
-- Token lifetime for client_credentials (the only documented example is 300s).
-- What `accounts/{iban}/{ccy}` returns for a currency the account does not hold.
-  Assumed to be a 4xx. If it is 200 with zeros, probing would report phantom currencies;
-  the workaround is explicit currencies in `BOG_ACCOUNTS`.
+- Token: client_credentials works with no scope, `expires_in` = 1800s.
+- `accounts/{iban}/{ccy}` for a currency the account does not hold → `404`
+  (`application/problem+json`). A held currency with zero balance → `200` with zeros.
+- v2 statement and today's activities use camelCase keys. The statement is
+  `{id, count, totalCount, records}`. Amounts come as JSON ints or decimals.
+- `documentValueDate` is usually null. `entryDate` has no offset (`2026-10-13T00:00:00`).
+- Card payments (`TRN`, also `GCE` today): sender = own account, beneficiary empty.
+  The merchant, MCC and original amount are only in `entryComment` / `docComment`:
+  `გადახდა - თანხა: HKD129.50; ობიექტი: <merchant>, <country>; MCC:5814; თარიღი: ...`.
+  Parsed into `merchant`, `mcc`, `original_amount`, `original_currency`.
+- `x-correlationid` is not returned on success responses.
+
+## Open questions
+
 - Whether statement paging requests count against the 1/min limit.
 - Maximum statement period accepted by the bank.
 - Whether `Accept-Language: en` changes any texts.

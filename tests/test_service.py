@@ -33,13 +33,14 @@ async def test_transactions_merge_statement_and_today(bog, make_service):
         "today:9990001",
         "statement:7770001",
         "statement:7770002",
+        "statement:7770004",
         "statement:7770003",
     ]
-    assert (res.total, res.returned, res.truncated, res.warnings) == (4, 4, False, [])
+    assert (res.total, res.returned, res.truncated, res.warnings) == (5, 5, False, [])
     assert stmt.call_count == page2.call_count == today.call_count == 1
     assert stmt.calls[0].request.headers["Authorization"] == "Bearer tok-1"
 
-    today_tx, incoming, outgoing, fee = res.transactions
+    today_tx, incoming, outgoing, card, fee = res.transactions
     assert today_tx.direction == "out"
     assert today_tx.amount == Decimal("200.00")
     assert today_tx.counterparty.name == "Ivan Ivanov"
@@ -56,6 +57,13 @@ async def test_transactions_merge_statement_and_today(bog, make_service):
     assert outgoing.direction == "out"
     assert outgoing.amount == Decimal("35.20")
     assert outgoing.counterparty.name == "Hetzner Online GmbH"
+
+    assert card.counterparty is None
+    assert card.merchant == "CAFE EXAMPLE 365, Hong Kong"
+    assert card.mcc == "5814"
+    assert (card.original_amount, card.original_currency) == (Decimal("129.50"), "HKD")
+    assert card.amount_gel == Decimal("46.28")
+    assert incoming.original_amount is None  # same-currency amounts are not duplicated
 
     # camelCase page with tz offset + 7-digit fraction
     assert fee.date == date(2026, 11, 4)
@@ -76,7 +84,10 @@ async def test_filters_and_limit(bog, make_service):
 
     res = await svc.get_transactions(direction="out", limit=2)
     assert [t.id for t in res.transactions] == ["today:9990001", "statement:7770002"]
-    assert (res.total, res.returned, res.truncated) == (3, 2, True)
+    assert (res.total, res.returned, res.truncated) == (4, 2, True)
+
+    res = await svc.get_transactions(query="cafe example")
+    assert [t.id for t in res.transactions] == ["statement:7770004"]
 
     res = await svc.get_transactions(query="hetzner")
     assert [t.id for t in res.transactions] == ["statement:7770002"]
@@ -93,7 +104,7 @@ async def test_statement_cache_serves_subperiod(bog, make_service):
     svc = make_service()
     await svc.get_transactions()
     res = await svc.get_transactions(date_from=date(2026, 11, 8), date_to=date(2026, 11, 9))
-    assert stmt.call_count == 1
+    assert stmt.call_count == 1  # served from cache
     assert [t.id for t in res.transactions] == ["statement:7770001", "statement:7770002"]
 
 

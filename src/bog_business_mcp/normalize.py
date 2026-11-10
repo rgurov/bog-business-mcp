@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any
@@ -12,6 +13,38 @@ from .models import Counterparty, Transaction
 
 # Georgia has no DST since 2005: Asia/Tbilisi == UTC+4 all year.
 TBILISI = timezone(timedelta(hours=4), "Asia/Tbilisi")
+
+
+# Card entries carry details only inside Georgian free text, e.g.
+# "გადახდა - თანხა: HKD129.50; ობიექტი: CITYBUS, Hong Kong; MCC:4131; თარიღი: ..."
+# (თანხა = amount, ობიექტი = merchant, თარიღი = date)
+_MERCHANT_RE = re.compile(r"ობიექტი:\s*([^;]+?)\s*(?:;|$)")
+_MCC_RE = re.compile(r"MCC:\s*(\d{4})")
+_ORIG_AMOUNT_RE = re.compile(r"თანხა:\s*([A-Z]{3})\s*([\d,]+(?:\.\d+)?)")
+
+
+def card_details(*texts: str | None, currency: str | None = None) -> dict[str, Any]:
+    """Extract merchant / MCC / original amount from BoG card entry texts.
+
+    The original amount is kept only when it is in a different currency than the account.
+    """
+    out: dict[str, Any] = {}
+    for text in texts:
+        if not text:
+            continue
+        if "merchant" not in out and (m := _MERCHANT_RE.search(text)):
+            out["merchant"] = re.sub(r"\s{2,}", " ", m.group(1)).strip() or None
+        if "mcc" not in out and (m := _MCC_RE.search(text)):
+            out["mcc"] = m.group(1)
+        if "original_amount" not in out and (m := _ORIG_AMOUNT_RE.search(text)):
+            amount = to_decimal(m.group(2).replace(",", ""))
+            if amount is not None:
+                out["original_currency"] = m.group(1)
+                out["original_amount"] = amount
+    if out.get("original_currency") == currency:
+        out.pop("original_currency")
+        out.pop("original_amount")
+    return out
 
 
 def today_tbilisi(now: datetime | None = None) -> date:
@@ -134,6 +167,13 @@ def from_statement(
         or parse_date(r.get("documentvaluedate"))
         or parse_date(r.get("authdate"))
     )
+    description = _clean(r.get("entrycomment")) or _clean(r.get("doccomment"))
+    card = card_details(
+        description,
+        _clean(r.get("doccomment")),
+        _clean(r.get("documentnomination")),
+        currency=currency,
+    )
     return Transaction(
         id=f"statement:{bank_id}",
         date=entry_date or date.min,
@@ -146,8 +186,9 @@ def from_statement(
         amount_gel=gel,
         counterparty=counterparty,
         purpose=_clean(r.get("documentnomination")),
-        description=_clean(r.get("entrycomment")) or _clean(r.get("doccomment")),
+        description=description,
         description_en=None,
+        **card,
         type=_clean(r.get("documentproductgroup")),
         document_no=_clean(r.get("entrydocumentnumber")),
         source="statement",
@@ -172,6 +213,12 @@ def from_today(
     gel = abs(gel) if gel is not None else (amount if currency == "GEL" else None)
 
     bank_id = _id_str(r.get("id")) or _id_str(r.get("dockey")) or "unknown"
+    card = card_details(
+        _clean(r.get("entrycomment")),
+        _clean(r.get("nomination")),
+        _clean(r.get("entrycommenten")),
+        currency=currency,
+    )
     return Transaction(
         id=f"today:{bank_id}",
         date=parse_date(r.get("postdate")) or today,
@@ -186,6 +233,7 @@ def from_today(
         purpose=_clean(r.get("nomination")),
         description=_clean(r.get("entrycomment")),
         description_en=_clean(r.get("entrycommenten")),
+        **card,
         type=_clean(r.get("entrytype")),
         document_no=_clean(r.get("docno")),
         source="today",
@@ -195,7 +243,15 @@ def from_today(
 
 def matches_query(tx: Transaction, query: str) -> bool:
     needle = query.casefold()
-    haystack = [tx.purpose, tx.description, tx.description_en, tx.document_no, tx.type]
+    haystack = [
+        tx.purpose,
+        tx.description,
+        tx.description_en,
+        tx.merchant,
+        tx.mcc,
+        tx.document_no,
+        tx.type,
+    ]
     if tx.counterparty:
         haystack += [tx.counterparty.name, tx.counterparty.inn, tx.counterparty.account]
     return any(needle in h.casefold() for h in haystack if h)

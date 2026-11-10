@@ -1,7 +1,7 @@
 {
   "Id": 987654,
-  "Count": 2,
-  "TotalCount": 3,
+  "Count": 3,
+  "TotalCount": 4,
   "Records": [
     {
       "EntryDate": "2026-11-09T00:00:00",
@@ -49,11 +49,53 @@
       "EntryComment": "Hosting payment",
       "DocumentProductGroup": "PLC",
       "DocumentValueDate": "2026-11-08T00:00:00",
-      "SenderDetails": {"Name": "შპს ჩვენი კომპანია", "Inn": "400000000", "AccountNumber": "GE00BG0000000000000001", "BankCode": "BAGAGE22", "BankName": "Bank of Georgia"},
-      "BeneficiaryDetails": {"Name": "Hetzner Online GmbH", "Inn": null, "AccountNumber": null, "BankCode": null, "BankName": null},
+      "SenderDetails": {
+        "Name": "შპს ჩვენი კომპანია",
+        "Inn": "400000000",
+        "AccountNumber": "GE00BG0000000000000001",
+        "BankCode": "BAGAGE22",
+        "BankName": "Bank of Georgia"
+      },
+      "BeneficiaryDetails": {
+        "Name": "Hetzner Online GmbH",
+        "Inn": null,
+        "AccountNumber": null,
+        "BankCode": null,
+        "BankName": null
+      },
       "DocumentNomination": "Server rent November",
       "DocumentKey": 5550002.0,
       "EntryId": 7770002.0
+    },
+    {
+      "EntryDate": "2026-11-07T00:00:00",
+      "EntryDocumentNumber": "1004",
+      "EntryAmountDebit": 17.18,
+      "EntryAmountDebitBase": 46.28,
+      "EntryAmountCredit": 0,
+      "EntryAmountCreditBase": null,
+      "EntryAmountBase": -46.28,
+      "EntryAmount": -17.18,
+      "EntryComment": "გადახდა - თანხა: HKD129.50; ობიექტი: CAFE  EXAMPLE 365, Hong Kong; MCC:5814; თარიღი: 06/11/2026 12:00",
+      "DocumentProductGroup": "TRN",
+      "DocumentValueDate": null,
+      "SenderDetails": {
+        "Name": "შპს ჩვენი კომპანია",
+        "Inn": "400000000",
+        "AccountNumber": "GE00BG0000000000000001USD",
+        "BankCode": "BAGAGE22",
+        "BankName": "Bank of Georgia"
+      },
+      "BeneficiaryDetails": {
+        "Name": null,
+        "Inn": null,
+        "AccountNumber": null,
+        "BankCode": null,
+        "BankName": null
+      },
+      "DocumentNomination": "გადახდა - თანხა: HKD 129.5; MCC: 5814; მერჩანტის",
+      "DocumentKey": 5550004,
+      "EntryId": 7770004
     }
   ]
 }
